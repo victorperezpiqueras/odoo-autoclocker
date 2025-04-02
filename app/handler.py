@@ -54,6 +54,8 @@ def check_attendance(event: dict[str, Any], context: dict[str, Any]) -> None:
         else:
             # Employee is not checked in, so check them in
             check_in_time = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
+            attendance_values = {"employee_id": employee_id, "check_in": check_in_time}
+            odoo.execute("hr.attendance", "create", attendance_values)
             print(f"Checked in successfully at {check_in_time}")
 
     except Exception as e:
