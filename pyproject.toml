@@ -2,7 +2,7 @@
 name = "autoclocker"
 version = "0.1.0"
 description = ""
-authors = ["vperez <vperez@teknei.com>"]
+authors = ["victorperezpiqueras <victorperezpiqueras@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
