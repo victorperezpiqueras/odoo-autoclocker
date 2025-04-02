@@ -31,3 +31,55 @@ odoorpc = "^0.10.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.mypy]
+strict = true
+exclude = [
+    "cdk\\.out",
+    "tests",
+    "\\.venv" # This is created in the pipelines
+]
+mypy_path = 'app'
+explicit_package_bases = true
+
+[tool.ruff]
+target-version = "py312"
+src = [".", "app"]
+exclude = [
+    "cdk.out",
+]
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "B", # flake8-bugbear
+    "S", # flake8-bandit
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+    "ARG001", # unused arguments in functions
+]
+ignore = [
+    "E501", # line too long, handled by formatter
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  # Have to re-enable the standard pragma
+  "pragma: no cover",
+  # Don't complain if tests don't hit defensive assertion code:
+  "raise AssertionError",
+  "raise NotImplementedError",
+  # Ignore runtime type checking
+  "if TYPE_CHECKING:",
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov=app --cov-report term-missing --cov-report json"
+filterwarnings = [
+    "ignore::DeprecationWarning:aws_lambda_powertools.*", # Powertools still uses deprecated methods from Pydantic
+]
+testpaths = "tests"

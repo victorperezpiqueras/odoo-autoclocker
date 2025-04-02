@@ -1,9 +1,11 @@
 import os
-import odoorpc
-from datetime import datetime
+from datetime import UTC, datetime
+from typing import Any, cast
+
+import odoorpc  # type: ignore[import-untyped]
 
 
-def check_attendance():
+def check_attendance(event: dict[str, Any], context: dict[str, Any]) -> None:
     """
     Check the current attendance status of the user and handle check-in/check-out accordingly.
 
@@ -11,6 +13,7 @@ def check_attendance():
         Dictionary with attendance details on success, None on failure.
     """
     try:
+        print("Procesing event:", event, context)
         # Retrieve Odoo credentials from environment variables
         odoo_url = os.environ.get("ODOO_URL")
         odoo_db = os.environ.get("ODOO_DB")
@@ -18,7 +21,7 @@ def check_attendance():
         odoo_version = os.environ.get("ODOO_VERSION")
         odoo_username = os.environ.get("ODOO_USERNAME")
         odoo_password = os.environ.get("ODOO_PASSWORD")
-        employee_id = int(os.environ.get("ODOO_EMPLOYEE_ID"))
+        employee_id = int(cast(str, os.environ.get("ODOO_EMPLOYEE_ID")))
 
         # Connect to Odoo
         odoo = odoorpc.ODOO(
@@ -39,7 +42,7 @@ def check_attendance():
             # Employee is checked in, so check them out
             attendance_id = active_attendance[0]["id"]
             check_in_time = active_attendance[0]["check_in"]
-            check_out_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            check_out_time = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
 
             odoo.execute(
                 "hr.attendance", "write", [attendance_id], {"check_out": check_out_time}
@@ -48,25 +51,10 @@ def check_attendance():
                 f"Checked out successfully! (Check-in: {check_in_time}, Check-out: {check_out_time})"
             )
 
-            return {
-                "attendance_id": attendance_id,
-                "check_in": check_in_time,
-                "check_out": check_out_time,
-            }
-
         else:
             # Employee is not checked in, so check them in
-            check_in_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            attendance_data = {"employee_id": employee_id, "check_in": check_in_time}
-            attendance_id = odoo.execute("hr.attendance", "create", attendance_data)
-
+            check_in_time = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
             print(f"Checked in successfully at {check_in_time}")
-
-            return {
-                "attendance_id": attendance_id,
-                "check_in": check_in_time,
-                "check_out": None,
-            }
 
     except Exception as e:
         print(f"Error checking attendance: {str(e)}")
@@ -75,4 +63,4 @@ def check_attendance():
 
 # Example usage
 if __name__ == "__main__":
-    check_attendance()
+    check_attendance(event={}, context={})
