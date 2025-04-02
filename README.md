@@ -24,7 +24,7 @@ and reducing manual errors.
 ### Clone and Install
 
 ```bash
-git clone https://github.com/yourusername/odoo-attendance-tracker.git
+git clone https://github.com/victorperezpiqueras/odoo-autoclocker.git
 cd odoo-attendance-tracker
 poetry install
 ```
