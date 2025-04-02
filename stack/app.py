@@ -54,7 +54,7 @@ class CronLambdaStack(cdk.Stack):
                 minute="0",
                 hour="7",
                 month="*",
-                week_day="*",
+                week_day="MON-FRI",
                 year="*",
             ),
         )
@@ -67,7 +67,7 @@ class CronLambdaStack(cdk.Stack):
                 minute="0",
                 hour="17",
                 month="*",
-                week_day="*",
+                week_day="MON-FRI",
                 year="*",
             ),
         )
