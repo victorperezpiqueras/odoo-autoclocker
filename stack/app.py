@@ -46,7 +46,10 @@ class CronLambdaStack(cdk.Stack):
             environment=lambda_env,
         )
 
-        # Create a rule to trigger at 7:00 AM every day (UTC) -> 8/9 AM in CET/CEST
+        # 10h range (account for +-30min for randomized checkin/out, which could make a min(9h), max(11h) of attendance:
+        # 7:00 AM every day (UTC) -> 8/9 AM in CET/CEST
+        # 5:00 PM every day (UTC) -> 6/7 PM in CET/CEST
+
         morning_rule = events.Rule(
             self,
             "MorningScheduleRule",
@@ -59,7 +62,6 @@ class CronLambdaStack(cdk.Stack):
             ),
         )
 
-        # Create a rule to trigger at 5:00 PM every day (UTC) -> 6/7 PM in CET/CEST
         evening_rule = events.Rule(
             self,
             "EveningScheduleRule",
