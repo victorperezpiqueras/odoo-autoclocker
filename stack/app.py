@@ -39,7 +39,7 @@ class CronLambdaStack(cdk.Stack):
             runtime=_lambda.Runtime.PYTHON_3_12,
             entry="app",
             index="handler.py",
-            handler="check_attendance",
+            handler="handler",
             layers=[lambda_layer],
             timeout=cdk.Duration.minutes(5),
             memory_size=512,
