@@ -1,4 +1,5 @@
 import os
+import random
 from datetime import UTC, datetime, timedelta
 from typing import Any, cast
 
@@ -117,7 +118,10 @@ def check_attendance(odoo: odoorpc.ODOO, employee_id: int) -> None:
         # Employee is checked in, so check them out
         attendance_id = active_attendance[0]["id"]
         check_in_time = active_attendance[0]["check_in"]
-        check_out_time = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
+
+        # Randomize check-out time by adding random minutes (between -30 and +30)
+        randomized_checkout = _randomize_date(datetime.now(UTC), range_minutes=30)
+        check_out_time = randomized_checkout.strftime("%Y-%m-%d %H:%M:%S")
 
         odoo.execute(
             "hr.attendance", "write", [attendance_id], {"check_out": check_out_time}
@@ -128,10 +132,20 @@ def check_attendance(odoo: odoorpc.ODOO, employee_id: int) -> None:
 
     else:
         # Employee is not checked in, so check them in
-        check_in_time = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
+        randomized_checkin = _randomize_date(datetime.now(UTC), range_minutes=30)
+        check_in_time = randomized_checkin.strftime("%Y-%m-%d %H:%M:%S")
         attendance_values = {"employee_id": employee_id, "check_in": check_in_time}
         odoo.execute("hr.attendance", "create", attendance_values)
         print(f"Checked in successfully at {check_in_time}")
+
+
+def _randomize_date(date: datetime, range_minutes: int = 30) -> datetime:
+    # Randomize the date by adding random minutes (between -30 and +30 by default)
+    random_minutes = random.randint(-range_minutes, range_minutes)  # noqa: S311
+
+    # add also random seconds
+    random_seconds = random.randint(-30, 30)  # noqa: S311
+    return date + timedelta(minutes=random_minutes) + timedelta(seconds=random_seconds)
 
 
 # Example usage
