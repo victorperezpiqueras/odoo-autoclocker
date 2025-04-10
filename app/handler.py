@@ -1,9 +1,13 @@
 import os
-import random
 from datetime import UTC, datetime, timedelta
 from typing import Any, cast
 
 import odoorpc  # type: ignore[import-untyped]
+
+from app.check_attendance import check_attendance
+from app.get_all_absences import get_all_absences
+from app.get_calendar_holidays import get_calendar_holidays
+from app.user_config import UserConfig
 
 
 def handler(event: dict[str, Any], context: dict[str, Any]) -> None:
@@ -17,6 +21,18 @@ def handler(event: dict[str, Any], context: dict[str, Any]) -> None:
         odoo_username = os.environ.get("ODOO_USERNAME")
         odoo_password = os.environ.get("ODOO_PASSWORD")
         employee_id = int(cast(str, os.environ.get("ODOO_EMPLOYEE_ID")))
+        checkin_time_utc = datetime.strptime(
+            os.environ.get("CHECKIN_TIME_UTC"), "%H:%M"
+        ).time()
+        checkout_time_utc = datetime.strptime(
+            os.environ.get("CHECKOUT_TIME_UTC"), "%H:%M"
+        ).time()
+
+        user_config = UserConfig(
+            employee_id=employee_id,
+            checkin_time=checkin_time_utc,
+            checkout_time=checkout_time_utc,
+        )
 
         # Connect to Odoo
         odoo = odoorpc.ODOO(
@@ -24,128 +40,28 @@ def handler(event: dict[str, Any], context: dict[str, Any]) -> None:
         )
         odoo.login(odoo_db, odoo_username, odoo_password)
 
-        today = datetime.now(UTC)
-        start_date = today - timedelta(days=1)
-        end_date = today + timedelta(days=1)
+        now = datetime.now(UTC)
+        start_date = now - timedelta(days=1)
+        end_date = now + timedelta(days=1)
 
         # Check if today is a holiday
         holidays = get_calendar_holidays(odoo, start_date=start_date, end_date=end_date)
-        if today.date() in [h.date() for h in holidays]:
+        if now.date() in [h.date() for h in holidays]:
             print("Today is a holiday. Skipping attendance check.")
             return None
 
         absences = get_all_absences(
-            odoo, employee_id, start_date=start_date, end_date=end_date
+            odoo, user_config, start_date=start_date, end_date=end_date
         )
         for absence in absences:
-            if absence[0].date() <= today.date() <= absence[1].date():
+            if absence[0].date() <= now.date() <= absence[1].date():
                 print("Employee is on leave. Skipping attendance check.")
                 return None
 
-        check_attendance(odoo, employee_id)
+        check_attendance(odoo, user_config)
     except Exception as e:
         print(f"Error checking attendance: {str(e)}")
         return None
-
-
-def get_calendar_holidays(
-    odoo: odoorpc.ODOO, start_date: datetime, end_date: datetime
-) -> list[datetime]:
-    try:
-        start_date = start_date.strftime("%Y-%m-%d %H:%M:%S")
-        end_date = end_date.strftime("%Y-%m-%d %H:%M:%S")
-
-        unusual_days: dict[str, bool] = odoo.execute_kw(
-            "hr.leave",
-            "get_unusual_days",
-            [start_date, end_date],
-        )
-
-        return [datetime.fromisoformat(k) for k, v in unusual_days.items() if v is True]
-
-    except Exception as e:
-        print(f"Error retrieving unusual days: {str(e)}")
-        return []
-
-
-def get_all_absences(
-    odoo: odoorpc.ODOO, employee_id: int, start_date: datetime, end_date: datetime
-) -> list[tuple[datetime, datetime]]:
-    try:
-        start_date = start_date.strftime("%Y-%m-%d %H:%M:%S")
-        end_date = end_date.strftime("%Y-%m-%d %H:%M:%S")
-
-        leave_domain = [
-            ("employee_id", "=", employee_id),
-            (
-                "state",
-                "=",
-                "validate",
-            ),  # doesnt properly filter out non-approved leaves
-            ("date_to", ">=", start_date),
-            ("date_from", "<=", end_date),
-        ]
-        leaves = odoo.execute(
-            "hr.leave",
-            "search_read",
-            leave_domain,
-            ["date_from", "date_to", "display_name"],
-        )
-        return [
-            (
-                datetime.fromisoformat(leave["date_from"]),
-                datetime.fromisoformat(leave["date_to"]),
-            )
-            for leave in leaves
-        ]
-
-    except Exception as e:
-        print(f"Error retrieving absences: {str(e)}")
-        return []
-
-
-def check_attendance(odoo: odoorpc.ODOO, employee_id: int) -> None:
-    # Check if employee is already checked in
-    domain = [
-        ("employee_id", "=", employee_id),
-        ("check_out", "=", False),  # Find records where check_out is not set
-    ]
-    active_attendance = odoo.execute(
-        "hr.attendance", "search_read", domain, ["id", "check_in"]
-    )
-
-    if active_attendance:
-        # Employee is checked in, so check them out
-        attendance_id = active_attendance[0]["id"]
-        check_in_time = active_attendance[0]["check_in"]
-
-        # Randomize check-out time by adding random minutes (between -30 and +30)
-        randomized_checkout = _randomize_date(datetime.now(UTC), range_minutes=30)
-        check_out_time = randomized_checkout.strftime("%Y-%m-%d %H:%M:%S")
-
-        odoo.execute(
-            "hr.attendance", "write", [attendance_id], {"check_out": check_out_time}
-        )
-        print(
-            f"Checked out successfully! (Check-in: {check_in_time}, Check-out: {check_out_time})"
-        )
-
-    else:
-        # Employee is not checked in, so check them in
-        randomized_checkin = _randomize_date(datetime.now(UTC), range_minutes=30)
-        check_in_time = randomized_checkin.strftime("%Y-%m-%d %H:%M:%S")
-        attendance_values = {"employee_id": employee_id, "check_in": check_in_time}
-        odoo.execute("hr.attendance", "create", attendance_values)
-        print(f"Checked in successfully at {check_in_time}")
-
-
-def _randomize_date(date: datetime, range_minutes: int = 30) -> datetime:
-    # Randomize the date by adding random minutes (between -30 and +30 by default)
-    random_minutes = random.randint(-range_minutes, range_minutes)  # noqa: S311
-
-    # add also random seconds
-    random_seconds = random.randint(-30, 30)  # noqa: S311
-    return date + timedelta(minutes=random_minutes) + timedelta(seconds=random_seconds)
 
 
 # Example usage
