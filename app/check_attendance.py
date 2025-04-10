@@ -59,7 +59,6 @@ def check_attendance(odoo: odoorpc.ODOO, user_config: UserConfig) -> None:
             attendance_id = active_attendance[0]["id"]
             check_in_time = active_attendance[0]["check_in"]
 
-            # Randomize check-out time by adding random minutes (between -30 and +30)
             randomized_checkout = _randomize_date(datetime.now(UTC), range_minutes=30)
             check_out_time = randomized_checkout.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -74,9 +73,9 @@ def check_attendance(odoo: odoorpc.ODOO, user_config: UserConfig) -> None:
 
 
 def _randomize_date(date: datetime, range_minutes: int = 30) -> datetime:
-    # Randomize the date by adding random minutes (between -30 and +30 by default)
-    random_minutes = random.randint(-range_minutes, range_minutes)  # noqa: S311
+    # Randomize the date by adding random minutes: between -30 and +0 (to avoid checking in the future) by default
+    random_minutes = random.randint(-range_minutes, 0)  # noqa: S311
 
     # add also random seconds
-    random_seconds = random.randint(-30, 30)  # noqa: S311
+    random_seconds = random.randint(-60, 0)  # noqa: S311
     return date + timedelta(minutes=random_minutes) + timedelta(seconds=random_seconds)
