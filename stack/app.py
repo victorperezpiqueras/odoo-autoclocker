@@ -51,9 +51,12 @@ class CronLambdaStack(cdk.Stack):
         # 5:00 PM every day (UTC) -> 6/7 PM in CET/CEST
 
         checkin_time = lambda_env.get("CHECKIN_TIME_UTC", "07:00")
+
         checkin_hour, checkin_minute = checkin_time.split(":")
-        checkin_hour = checkin_hour.lstrip("0")  # remove leading 0s
-        checkin_minute = checkin_minute.lstrip("0")  # remove leading 0s
+        # Convert to int and back to string to remove leading zeros
+        checkin_hour = str(int(checkin_hour))
+        checkin_minute = str(int(checkin_minute))
+
         morning_rule = events.Rule(
             self,
             "MorningScheduleRule",
@@ -68,8 +71,9 @@ class CronLambdaStack(cdk.Stack):
 
         checkout_time = lambda_env.get("CHECKOUT_TIME_UTC", "17:00")
         checkout_hour, checkout_minute = checkout_time.split(":")
-        checkout_hour = checkout_hour.lstrip("0")  # remove leading 0s
-        checkout_minute = checkout_minute.lstrip("0")  # remove leading 0s
+        # Convert to int and back to string to remove leading zeros
+        checkout_hour = str(int(checkout_hour))
+        checkout_minute = str(int(checkout_minute))
 
         evening_rule = events.Rule(
             self,
