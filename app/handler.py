@@ -4,10 +4,10 @@ from typing import Any, cast
 
 import odoorpc  # type: ignore[import-untyped]
 
-from app.check_attendance import check_attendance
-from app.get_all_absences import get_all_absences
-from app.get_calendar_holidays import get_calendar_holidays
-from app.user_config import UserConfig
+from check_attendance import check_attendance
+from get_all_absences import get_all_absences
+from get_calendar_holidays import get_calendar_holidays
+from user_config import UserConfig
 
 
 def handler(event: dict[str, Any], context: dict[str, Any]) -> None:
@@ -22,10 +22,10 @@ def handler(event: dict[str, Any], context: dict[str, Any]) -> None:
         odoo_password = os.environ.get("ODOO_PASSWORD")
         employee_id = int(cast(str, os.environ.get("ODOO_EMPLOYEE_ID")))
         checkin_time_utc = datetime.strptime(
-            os.environ.get("CHECKIN_TIME_UTC"), "%H:%M"
+            cast(str, os.environ.get("CHECKIN_TIME_UTC")), "%H:%M"
         ).time()
         checkout_time_utc = datetime.strptime(
-            os.environ.get("CHECKOUT_TIME_UTC"), "%H:%M"
+            cast(str, os.environ.get("CHECKOUT_TIME_UTC")), "%H:%M"
         ).time()
 
         user_config = UserConfig(

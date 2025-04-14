@@ -1,8 +1,8 @@
 from datetime import datetime
 
-import odoorpc
+import odoorpc  # type: ignore[import-untyped]
 
-from app.user_config import UserConfig
+from user_config import UserConfig
 
 
 def get_all_absences(
@@ -12,8 +12,8 @@ def get_all_absences(
     end_date: datetime,
 ) -> list[tuple[datetime, datetime]]:
     try:
-        start_date = start_date.strftime("%Y-%m-%d %H:%M:%S")
-        end_date = end_date.strftime("%Y-%m-%d %H:%M:%S")
+        start_date_str = start_date.strftime("%Y-%m-%d %H:%M:%S")
+        end_date_str = end_date.strftime("%Y-%m-%d %H:%M:%S")
 
         leave_domain = [
             ("employee_id", "=", user_config.get("employee_id")),
@@ -22,8 +22,8 @@ def get_all_absences(
                 "=",
                 "validate",
             ),  # doesnt properly filter out non-approved leaves
-            ("date_to", ">=", start_date),
-            ("date_from", "<=", end_date),
+            ("date_to", ">=", start_date_str),
+            ("date_from", "<=", end_date_str),
         ]
         leaves = odoo.execute(
             "hr.leave",

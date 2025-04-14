@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 import aws_cdk as cdk
 from aws_cdk import (
@@ -17,7 +18,7 @@ from constructs import Construct
 
 
 class CronLambdaStack(cdk.Stack):
-    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, **kwargs: Any) -> None:
         super().__init__(scope, id, **kwargs)
 
         with open(".env.json") as file:

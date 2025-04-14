@@ -1,9 +1,9 @@
 import random
 from datetime import UTC, datetime, timedelta
 
-import odoorpc
+import odoorpc  # type: ignore[import-untyped]
 
-from app.user_config import UserConfig
+from user_config import UserConfig
 
 
 def check_attendance(odoo: odoorpc.ODOO, user_config: UserConfig) -> None:
@@ -18,14 +18,14 @@ def check_attendance(odoo: odoorpc.ODOO, user_config: UserConfig) -> None:
     now = datetime.now(UTC)
 
     checkin_time = now.replace(
-        hour=user_config.get("checkin_time").hour,
-        minute=user_config.get("checkin_time").minute,
+        hour=user_config["checkin_time"].hour,
+        minute=user_config["checkin_time"].minute,
         second=0,
         microsecond=0,
     )
     checkout_time = now.replace(
-        hour=user_config.get("checkout_time").hour,
-        minute=user_config.get("checkout_time").minute,
+        hour=user_config["checkout_time"].hour,
+        minute=user_config["checkout_time"].minute,
         second=0,
         microsecond=0,
     )
