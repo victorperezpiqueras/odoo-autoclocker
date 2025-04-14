@@ -21,17 +21,17 @@ tests-mypy = ["mypy (>=1.11.1)", "pytest-mypy-plugins"]
 
 [[package]]
 name = "aws-cdk-asset-awscli-v1"
-version = "2.2.230"
+version = "2.2.231"
 description = "A library that contains the AWS CLI for use in Lambda Layers"
 optional = false
 python-versions = "~=3.9"
 files = [
-    {file = "aws_cdk_asset_awscli_v1-2.2.230-py3-none-any.whl", hash = "sha256:e41bf095ca74af9924e9b2e3244091ba3298f40b938b2397634f551d6ec8a099"},
-    {file = "aws_cdk_asset_awscli_v1-2.2.230.tar.gz", hash = "sha256:9e2281ce1ffe2cdb8d433bd26d3b2c5767eac282871064ab66de9a2ecc987fec"},
+    {file = "aws_cdk_asset_awscli_v1-2.2.231-py3-none-any.whl", hash = "sha256:06d6b1d9e52272c315b944320f7039b47c6a6058f063fa33ab0ec06fea17bfbe"},
+    {file = "aws_cdk_asset_awscli_v1-2.2.231.tar.gz", hash = "sha256:859d99e0fcdc2f6ada44090ad9f921743da3ca3a6d9f39ab06836d4c8e0fbc23"},
 ]
 
 [package.dependencies]
-jsii = ">=1.110.0,<2.0.0"
+jsii = ">=1.111.0,<2.0.0"
 publication = ">=0.0.3"
 typeguard = ">=2.13.3,<4.3.0"
 
@@ -53,17 +53,17 @@ typeguard = ">=2.13.3,<5.0.0"
 
 [[package]]
 name = "aws-cdk-aws-lambda-python-alpha"
-version = "2.187.0a0"
+version = "2.189.0a0"
 description = "The CDK Construct Library for AWS Lambda in Python"
 optional = false
 python-versions = "~=3.9"
 files = [
-    {file = "aws_cdk_aws_lambda_python_alpha-2.187.0a0-py3-none-any.whl", hash = "sha256:8d34e0033d6d8f82917c93931bb162e14a746ddbec6a46212f4d9ef5188a453e"},
-    {file = "aws_cdk_aws_lambda_python_alpha-2.187.0a0.tar.gz", hash = "sha256:5005fcbab9f538a8b8265afc87a9b10f0498869e49c4cf0fdb55a49db988b05b"},
+    {file = "aws_cdk_aws_lambda_python_alpha-2.189.0a0-py3-none-any.whl", hash = "sha256:b0ced765dbb05fc91f9f5b3a129fb7e246eff2a095608d91de34418b803d5122"},
+    {file = "aws_cdk_aws_lambda_python_alpha-2.189.0a0.tar.gz", hash = "sha256:510e5dfd75028db6d007ce5714f2b6199476e60f1bf96f7ebf462f34b674eca4"},
 ]
 
 [package.dependencies]
-aws-cdk-lib = ">=2.187.0,<3.0.0"
+aws-cdk-lib = ">=2.189.0,<3.0.0"
 constructs = ">=10.0.0,<11.0.0"
 jsii = ">=1.110.0,<2.0.0"
 publication = ">=0.0.3"
@@ -87,13 +87,13 @@ typeguard = ">=2.13.3,<4.3.0"
 
 [[package]]
 name = "aws-cdk-lib"
-version = "2.187.0"
+version = "2.189.0"
 description = "Version 2 of the AWS Cloud Development Kit library"
 optional = false
 python-versions = "~=3.9"
 files = [
-    {file = "aws_cdk_lib-2.187.0-py3-none-any.whl", hash = "sha256:b50b664d2c3c63005acf4653b843d25bb29601c8b3e236893c873f7a08e2d69b"},
-    {file = "aws_cdk_lib-2.187.0.tar.gz", hash = "sha256:e356072e256696f3be947981fda590c9da1f8219474575b3b833a711b0b00743"},
+    {file = "aws_cdk_lib-2.189.0-py3-none-any.whl", hash = "sha256:0c991e67a6b03ee23b9fbf98358e89d9e298fc3b3fafb1def2fb79fa38551b94"},
+    {file = "aws_cdk_lib-2.189.0.tar.gz", hash = "sha256:10b5d5b07a9ef2bf831edb9d26c736ad87b186d3ae416c16e9cf1ca241d71c58"},
 ]
 
 [package.dependencies]
@@ -218,13 +218,13 @@ type = ["pytest-mypy"]
 
 [[package]]
 name = "jsii"
-version = "1.110.0"
+version = "1.111.0"
 description = "Python client for jsii runtime"
 optional = false
 python-versions = "~=3.9"
 files = [
-    {file = "jsii-1.110.0-py3-none-any.whl", hash = "sha256:b46fcc9f6c80e4a3d92c883138194b7311da43b9f954f8473fba8829bb3efaa1"},
-    {file = "jsii-1.110.0.tar.gz", hash = "sha256:d7b323ca66ea9260d210d96b1406671fe399ea62d075ade6374d6bf2b7a5ad33"},
+    {file = "jsii-1.111.0-py3-none-any.whl", hash = "sha256:3084e31173e73d2eefee678c8ee31aa49428830509043057a421a4c0dde94434"},
+    {file = "jsii-1.111.0.tar.gz", hash = "sha256:db523ab9b6575c84d6ed8779cdbdc739abd48a7cb0723b66beb84c1a9dc31c7c"},
 ]
 
 [package.dependencies]
@@ -497,13 +497,13 @@ test = ["mypy", "pytest", "typing-extensions"]
 
 [[package]]
 name = "typing-extensions"
-version = "4.13.0"
+version = "4.13.2"
 description = "Backported and Experimental Type Hints for Python 3.8+"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "typing_extensions-4.13.0-py3-none-any.whl", hash = "sha256:c8dd92cc0d6425a97c18fbb9d1954e5ff92c1ca881a309c45f06ebc0b79058e5"},
-    {file = "typing_extensions-4.13.0.tar.gz", hash = "sha256:0a4ac55a5820789d87e297727d229866c9650f6521b64206413c4fbada24d95b"},
+    {file = "typing_extensions-4.13.2-py3-none-any.whl", hash = "sha256:a439e7c04b49fec3e5d3e2beaa21755cadbbdc391694e28ccdd36ca4a1408f8c"},
+    {file = "typing_extensions-4.13.2.tar.gz", hash = "sha256:e6c81219bd689f51865d9e372991c540bda33a0379d5573cddb9a3a23f7caaef"},
 ]
 
 [[package]]
@@ -529,4 +529,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.12,<4.0.0"
-content-hash = "36770c8418f893346f36db85160c97df9ba839fa040393760e437e19c27e6f85"
+content-hash = "5a77587b1f174251c83673eab76fac358450d0a130d8ef3bb46ce890f1119cc1"

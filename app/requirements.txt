@@ -1,3 +1,6 @@
 odoorpc==0.10.1 ; python_version >= "3.12" and python_full_version < "4.0.0" \
     --hash=sha256:a0900bdd5c989c414b1ef40dafccd9363f179312d9166d9486cf70c7c2f0dd44 \
     --hash=sha256:d0bc524c5b960781165575bad9c13d032d6f968c3c09276271045ddbbb483aa5
+typing-extensions==4.13.2 ; python_version >= "3.12" and python_full_version < "4.0.0" \
+    --hash=sha256:a439e7c04b49fec3e5d3e2beaa21755cadbbdc391694e28ccdd36ca4a1408f8c \
+    --hash=sha256:e6c81219bd689f51865d9e372991c540bda33a0379d5573cddb9a3a23f7caaef

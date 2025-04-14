@@ -19,6 +19,7 @@ mypy = "^1.13.0"
 [tool.poetry.group.core.dependencies]  # core dependencies
 python = ">=3.12,<4.0.0"
 odoorpc = "^0.10.1"
+typing_extensions = "^4.13.2"
 
 [build-system]
 requires = ["poetry-core"]
