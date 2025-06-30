@@ -32,7 +32,7 @@ will have their checkin time randomized to 8:30-9:00, and their checkout time ra
 
 ```bash
 git clone https://github.com/victorperezpiqueras/odoo-autoclocker.git
-cd odoo-attendance-tracker
+cd odoo-autoclocker
 poetry install
 ```
 
